@@ -20,7 +20,7 @@ for disorder in root.findall(".//Disorder"):
 
         # Ensure HPO ID has 7 digits
         hpo_id_padded = hpo_id.replace("HP:", "").zfill(7)
-        formatted_hpo_id = f"HP:{hpo_id_padded}"
+        formatted_hpo_id = f"HPO:{hpo_id_padded}"
 
         # Store the formatted result
         data.append(f"{formatted_hpo_id}  OrphaCode:{orpha_code}")
