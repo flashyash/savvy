@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 
+
+
 # Load the XML file
 xml_file = "en_product4.xml"
 
