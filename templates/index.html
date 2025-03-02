@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Symptom SAVVY - Rare Disease Diagnosis</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <nav class="navbar">
@@ -135,23 +135,6 @@
     </div>
   </section>
 
-
-  <section class="find-doctor">
-    <h2>Find a Specialist Near You</h2>
-    <p>Based on your symptoms, find doctors experienced in treating your potential condition.</p>
-    
-    <div class="doctor-search-container">
-      <input type="text" id="locationInput" placeholder="Enter your location">
-      <button id="findDoctors">Find Doctors</button>
-    </div>
-
-    <div id="map"></div>
-    <div id="doctor-results"></div>
-  </section>
-
-  <!-- Google Maps API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCXRBduYFt6XTnREIE_a2JKGhtSsJe4Q4&libraries=places&callback=initMap" async defer></script>
-
   <section class="faq-section">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-container">
@@ -223,7 +206,6 @@
     </div>
   </div>
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
