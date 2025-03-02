@@ -11,6 +11,15 @@ Our platform assists patients and healthcare providers by analyzing symptoms,
 comparing them to a vast rare disease database, and generating potential 
 matches for further investigation.
 
+
+Make sure you have the following installed before running the project:
+
+Python 3.x
+pip (Python package manager)
+Flask
+Virtual environment (recommended)
+
+
 Please run the following code below in your terminal:
 
 git clone https://github.com/flashyash/savvy
