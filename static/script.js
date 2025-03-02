@@ -176,3 +176,22 @@ function findDoctorsNearby(userLocation) {
     });
 }
 
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("findDoctors").addEventListener("click", async function () {
+      let location = document.getElementById("locationInput").value;
+      let symptoms = ["HP:0000256", "HP:0002007", "HP:000235"]; // Replace with real data
+
+      let response = await fetch("/get_disease_and_doctors", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symptoms: symptoms, location: location }),
+      });
+
+      let data = await response.json();
+      console.log(data);
+      alert("Diseases: " + data.diseases.join(", ") + "\nLocation: " + data.location);
+  });
+});
+
