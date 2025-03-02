@@ -1,3 +1,155 @@
+// API endpoints - update base URL if your backend is on a different domain
+const API_BASE_URL = '';  // e.g. 'http://localhost:5000' if different from frontend
+const API_START = `/api/start_diagnosis`;
+const API_CONTINUE = `/api/continue_diagnosis`;
+const API_RESET = `/api/reset_session`;
+
+let session_id = null;
+
+/**
+ * Start a new diagnosis session with initial symptoms
+ * @param {Array} symptoms - Array of HPO IDs for initial symptoms
+ * @param {Number} maxIterations - Maximum number of question iterations
+ * @param {Number} symptomsPerIteration - Number of symptoms to ask about each time
+ * @returns {Promise} - Promise resolving to the API response data
+ */
+async function startDiagnosis(symptoms, maxIterations = 4, symptomsPerIteration = 5) {
+  
+  fetch(`http://127.0.0.1:5000${API_START}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        symptoms: symptoms,
+        max_iterations: maxIterations,
+        symptoms_per_iteration: symptomsPerIteration
+      })
+    }).then(response => {
+      return response.json().next_symptoms;
+    })
+}
+
+/**
+ * Continue an existing diagnosis session with symptom responses
+ * @param {String} sessionId - Session ID from previous API response
+ * @param {Object} responses - Object mapping symptom IDs to boolean values
+ * @returns {Promise} - Promise resolving to the API response data
+ */
+async function continueDiagnosis(sessionId, responses) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000${API_CONTINUE}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        responses: responses
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error continuing diagnosis:', error);
+    throw error;
+  }
+}
+
+/**
+ * Reset a diagnosis session or create a new one
+ * @param {String} sessionId - Optional session ID to reset (or null for new session)
+ * @returns {Promise} - Promise resolving to the API response data
+ */
+async function resetSession(sessionId = null) {
+  try {
+    const response = await fetch(API_RESET, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        session_id: sessionId
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error resetting session:', error);
+    throw error;
+  }
+}
+
+/**
+ * Process API response from either start or continue diagnosis
+ * @param {Object} data - Response data from the API
+ * @returns {Object} - Processed data with simplified structure
+ */
+function processApiResponse(data) {
+  // Extract key information from the response
+  const processedData = {
+    sessionId: data.session_id,
+    currentSymptoms: data.current_symptoms || [],
+    nextSymptoms: data.next_symptoms || [],
+    possibleDiseases: data.possible_diseases || [],
+    diseaseCount: data.disease_count || 0,
+    diseaseScores: data.disease_scores || {},
+    isDone: data.done || false
+  };
+  
+  // Add formatted disease list with scores for display
+  processedData.formattedDiseases = processedData.possibleDiseases.map(disease => {
+    const score = processedData.diseaseScores[disease];
+    const scoreFormatted = score ? `${(score * 100).toFixed(1)}%` : 'N/A';
+    
+    return {
+      name: disease,
+      score: score || null,
+      scoreFormatted: scoreFormatted
+    };
+  });
+  
+  return processedData;
+}
+
+// Usage examples:
+
+// 1. Starting a new diagnosis
+// const initialSymptoms = ['HP:0000256', 'HP:0002007', 'HP:0000235'];
+// startDiagnosis(initialSymptoms)
+//   .then(data => {
+//     const processed = processApiResponse(data);
+//     console.log('Session started:', processed.sessionId);
+//     console.log('Next questions:', processed.nextSymptoms);
+//   })
+//   .catch(err => console.error('Failed to start diagnosis:', err));
+
+// 2. Continuing a diagnosis
+// const sessionId = 'previously-obtained-session-id';
+// const responses = {
+//   'HP:0001234': true,   // Yes, symptom is present
+//   'HP:0005678': false,  // No, symptom is not present
+// };
+// continueDiagnosis(sessionId, responses)
+//   .then(data => {
+//     const processed = processApiResponse(data);
+//     if (processed.isDone) {
+//       console.log('Diagnosis complete!');
+//       console.log('Possible diseases:', processed.formattedDiseases);
+//     } else {
+//       console.log('More questions needed:', processed.nextSymptoms);
+//     }
+//   })
+//   .catch(err => console.error('Failed to continue diagnosis:', err));
+
 // Get the modal
 var modal = document.getElementById("diagnosisModal");
 
@@ -27,6 +179,16 @@ window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
+}
+
+function addBotMessage(message) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'bot-message';
+  messageDiv.innerHTML = `<p>${message}</p>`;
+  chatMessages.appendChild(messageDiv);
+  
+  // Scroll to the bottom
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 // Auto-scroll partners
@@ -71,21 +233,49 @@ faqQuestions.forEach(question => {
 });
 
 // Chatbot functionality
-document.getElementById('submitSymptoms').addEventListener('click', function() {
-  initiateChatbot();
+document.getElementById('submitSymptoms').addEventListener('click', async function() {
+  symptoms = document.getElementById("inputSymptoms").value.split(",");
+
+  phenotype = [...symptoms]
+
+  const response = await fetch(`http://127.0.0.1:5000${API_START}`, {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                              symptoms: symptoms,
+                              max_iterations: 4,
+                              symptoms_per_iteration: 5
+                            })});
+
+  const responseData = await response.json();
+  const nextSymptoms = responseData.next_symptoms || [];
+  
+  // console.log(nextSymptoms.join(','));
+
+  // HP:0002167,HP:0002169,HP:0002353
+
+  collectedSymptoms = nextSymptoms;
+  session_id = responseData.session_id;
+  // console.log(responseData);
+  
+  console.log(collectedSymptoms);
+  initiateChatbot("Enter a comma-separated list, with no spaces, corresponding to whether or not you have each symptom displayed, in the order they appear in a lowercase y corresponds to a yes, and a lowercase y corresponds to a no. \n" + collectedSymptoms.join(', '));
 });
 
 // Head-to-toe assessment chatbot
-function initiateChatbot() {
+function initiateChatbot(message) {
   // Clear the modal content and prepare for chatbot
   const modalContent = document.querySelector('.modal-content');
+  //<p>Welcome to the Symptom SAVVY chatbot. I'll guide you through a head-to-toe assessment to help identify potential rare conditions. Please answer each question with as much detail as possible.</p>
   modalContent.innerHTML = `
     <span class="close">&times;</span>
     <h3>Symptom Assessment</h3>
     <div class="chatbot-container">
       <div class="chat-messages" id="chatMessages">
         <div class="bot-message">
-          <p>Welcome to the Symptom SAVVY chatbot. I'll guide you through a head-to-toe assessment to help identify potential rare conditions. Please answer each question with as much detail as possible.</p>
+          <p>${message}</p>
         </div>
       </div>
       <div class="chat-input">
@@ -196,10 +386,6 @@ function initiateChatbot() {
   ];
   
   let currentQuestionIndex = 0;
-  let collectedSymptoms = [];
-  
-  // Add first question
-  addBotMessage(assessmentQuestions[0].area + ": " + assessmentQuestions[0].question);
   
   // Handle user input
   sendButton.addEventListener('click', processUserResponse);
@@ -208,28 +394,151 @@ function initiateChatbot() {
       processUserResponse();
     }
   });
+
+  function suggest(data) {
+    fetch(`http://127.0.0.1:5000/suggest?query=${data}`)
+      .then(response => response.json())
+      .then(data => {
+        // Access the suggestions array
+        const suggestions = data.suggestions;
+        
+        // console.log(suggestions);
+        return suggestions;
+      });
+  }
   
-  function processUserResponse() {
+  async function processUserResponse() {
     const userResponse = userInput.value.trim();
+
     if (userResponse === '') return;
     
     // Add user's message to chat
     addUserMessage(userResponse);
-    userInput.value = '';
     
     // Process response
-    const currentQuestion = assessmentQuestions[currentQuestionIndex];
+    // const currentQuestion = assessmentQuestions[currentQuestionIndex];
     
     // If user responded with yes/positive, ask follow-up
-    if (isPositiveResponse(userResponse)) {
-      collectedSymptoms.push({
-        area: currentQuestion.area,
-        reported: true,
-        details: 'Awaiting details'
-      });
+    new_phenotype = {}
+
+    userResponses = userResponse.split(',');
+    // console.log(collectedSymptoms);
+    // console.log(userResponses);
+
+    for (let i = 0; i < collectedSymptoms.length; i++) {
+      // console.log(i);
+      if (userResponses[i] == 'y') {
+        // console.log("Success");
+        new_phenotype[collectedSymptoms[i]] = true;
+      }
+      else {
+        new_phenotype[collectedSymptoms[i]] = false;
+      }
+    }
+
+    // console.log(new_phenotype);
+
+    const response = await fetch(`http://127.0.0.1:5000${API_CONTINUE}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        responses: new_phenotype,
+        session_id: session_id
+    })});
+
+    //HP:0002205,HP:0002240,HP:0002360
+
+    const responseData = await response.json();
+
+    collectedSymptoms = responseData.next_symptoms;
+    session_id = responseData.session_id;
+    
+    // Scroll to the bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    userInput.value = '';
+
+    // console.log(responseData.possible_diseases);
+    // console.log(responseData.done)
+
+    if (responseData.done) {
+      addBotMessage("Here are possible diseases: " + responseData.possible_diseases.join(", "));
+    }
+    else {
+      addBotMessage(collectedSymptoms.join(', '));
+    }
+    
+    // Wait for details before moving to next question
+    sendButton.removeEventListener('click', processUserResponse);
+    userInput.removeEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        processUserResponse();
+      }
+    });
       
+    // Set up new listeners for detail response
+    const detailsHandler = async function() {
+      const userResponse = userInput.value.trim();
+
+      if (userResponse === '') return;
+      
+      // Add user's message to chat
+      addUserMessage(userResponse);
+      
+      // Process response
+      // const currentQuestion = assessmentQuestions[currentQuestionIndex];
+      
+      // If user responded with yes/positive, ask follow-up
+      new_phenotype = {}
+
+      userResponses = userResponse.split(',');
+      // console.log(userResponses);
+      // console.log(collectedSymptoms);
+
+      for (let i = 0; i < collectedSymptoms.length; i++) {
+        if (userResponses[i] == 'y') {
+          //console.log(i)
+          new_phenotype[collectedSymptoms[i]] = true;
+        }
+        else {
+          new_phenotype[collectedSymptoms[i]] = false;
+        }
+      }
+
+      userInput.value = '';
+
+      //console.log(new_phenotype);
+
+      const response = await fetch(`http://127.0.0.1:5000${API_CONTINUE}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          responses: new_phenotype,
+          session_id: session_id
+      })});
+  
+      const responseData = await response.json();
+      collectedSymptoms = responseData.next_symptoms;
+      session_id = responseData.session_id;
+
+      //console.log(collectedSymptoms);
+  
+      //console.log(responseData.possible_diseases);
+      //console.log(responseData.done)
+
+      if (responseData.done) {
+        addBotMessage("Here are possible diseases: " + responseData.possible_diseases.join(", "));
+      }
+      else {
+        addBotMessage(collectedSymptoms.join(', '));
+      }
+
       // Ask for more details
-      addBotMessage(currentQuestion.followUp);
+      // addBotMessage(currentQuestion.followUp);
       
       // Wait for details before moving to next question
       sendButton.removeEventListener('click', processUserResponse);
@@ -238,34 +547,7 @@ function initiateChatbot() {
           processUserResponse();
         }
       });
-      
-      // Set up new listeners for detail response
-      const detailsHandler = function() {
-        const detailsResponse = userInput.value.trim();
-        if (detailsResponse === '') return;
-        
-        // Add user's details to chat
-        addUserMessage(detailsResponse);
-        userInput.value = '';
-        
-        // Save details
-        collectedSymptoms[collectedSymptoms.length - 1].details = detailsResponse;
-        
-        // Move to next question or finish
-        moveToNextQuestion();
-        
-        // Reset listeners
-        sendButton.removeEventListener('click', detailsHandler);
-        userInput.removeEventListener('keypress', detailsKeyHandler);
-        
-        // Restore original handlers
-        sendButton.addEventListener('click', processUserResponse);
-        userInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            processUserResponse();
-          }
-        });
-      };
+    };
       
       const detailsKeyHandler = function(e) {
         if (e.key === 'Enter') {
@@ -275,17 +557,17 @@ function initiateChatbot() {
       
       sendButton.addEventListener('click', detailsHandler);
       userInput.addEventListener('keypress', detailsKeyHandler);
-    } else {
-      // No symptoms in this area
-      collectedSymptoms.push({
-        area: currentQuestion.area,
-        reported: false,
-        details: 'None reported'
-      });
+    // } else {
+    //   // No symptoms in this area
+    //   collectedSymptoms.push({
+    //     area: currentQuestion.area,
+    //     reported: false,
+    //     details: 'None reported'
+    //   });
       
-      // Move to next question without follow-up
-      moveToNextQuestion();
-    }
+    //   // Move to next question without follow-up
+    //   moveToNextQuestion();
+    // }
   }
   
   function moveToNextQuestion() {
@@ -348,6 +630,8 @@ function initiateChatbot() {
   }
   
   function addUserMessage(message) {
+    //console.log("Adding user message:", message, typeof message);
+
     const messageDiv = document.createElement('div');
     messageDiv.className = 'user-message';
     messageDiv.innerHTML = `<p>${message}</p>`;
@@ -357,18 +641,9 @@ function initiateChatbot() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
   
-  function addBotMessage(message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'bot-message';
-    messageDiv.innerHTML = `<p>${message}</p>`;
-    chatMessages.appendChild(messageDiv);
-    
-    // Scroll to the bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-  
   function isPositiveResponse(response) {
     const positivePatterns = [
+      /\by\b/i,
       /\byes\b/i, 
       /\byeah\b/i, 
       /\byep\b/i, 
@@ -454,7 +729,7 @@ document.getElementById("findDoctorsButton").addEventListener("click", function 
       body: JSON.stringify({ disease: disease, location: location })
   })
   .then(response => {
-      console.log("Server response status:", response.status);
+      //("Server response status:", response.status);
       return response.text();  // Read raw response
   })
   .then(text => {

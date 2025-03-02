@@ -100,16 +100,20 @@ class disease_finder:
                     symptom_frequencies[symptom] += 1
 
         frequent_symptoms = [x[0] for x in sorted(symptom_frequencies.items(), key = lambda x: x[1], reverse = True) if x[0] not in self.visited][:self.m]
+        self.iteration_count += 1
+
+        print(self.phenotype)
+        print(self.similarity_scores)
         print(frequent_symptoms)
+        
+        return frequent_symptoms
 
         # prompt patient for more symptoms
-        for symptom in frequent_symptoms:
-            flag = input(f"{symptom} Y/N: ")
-            if flag == "Y":
-                self.phenotype.append(symptom)
-            self.visited.append(symptom)
-
-        self.iteration_count += 1
+        # for symptom in frequent_symptoms:
+        #     flag = input(f"{symptom} Y/N: ")
+        #     if flag == "Y":
+        #         self.phenotype.append(symptom)
+        #     self.visited.append(symptom)
 
     def reset(self):
         self.phenotype = []
