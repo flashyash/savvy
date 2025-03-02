@@ -421,3 +421,106 @@ document.addEventListener('DOMContentLoaded', function() {
   revealSection();
   window.addEventListener('scroll', revealSection);
 });
+
+
+let map;
+
+function initializeMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 9,
+      center: { lat: 42.3555, lng: -71.0565 }, // Default to Boston
+      zoomControl: true, // Enables the default zoom buttons
+      mapTypeControl: true, // Enables map type switching
+      streetViewControl: true, // Enables Street View
+      fullscreenControl: true // Enables fullscreen mode
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initializeMap);
+
+
+document.getElementById("findDoctorsButton").addEventListener("click", function () {
+  const disease = document.getElementById("diseaseInput").value;
+  const location = document.getElementById("locationInput").value;
+
+  if (!disease || !location) {
+      alert("❌ Please enter both a disease and a location.");
+      return;
+  }
+
+  fetch("/get_doctors", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ disease: disease, location: location })
+  })
+  .then(response => {
+      console.log("Server response status:", response.status);
+      return response.text();  // Read raw response
+  })
+  .then(text => {
+      try {
+          const jsonData = JSON.parse(text);
+          console.log("Parsed JSON response:", jsonData);
+          updateMap(jsonData);
+      } catch (error) {
+          console.error("❌ JSON Parsing Error:", text);
+          alert("Invalid server response. Check API logs.");
+      }
+  })
+  .catch(error => {
+      console.error("❌ Error fetching doctors:", error);
+      alert("Failed to retrieve doctor information. Check console for details.");
+  });
+});
+
+
+function updateMap(doctors) {
+    if (!doctors || doctors.length === 0) {
+        alert("No specialists found for the given disease.");
+        return;
+    }
+
+    // Clear existing markers
+    const bounds = new google.maps.LatLngBounds();
+
+    doctors.forEach(doctor => {
+        const position = { lat: doctor.lat, lng: doctor.lng };
+        const marker = new google.maps.Marker({
+            map,
+            position,
+            title: doctor.name
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: `<strong>${doctor.name}</strong><br>${doctor.address}<br>Rating: ${doctor.rating}<br>
+                      <a href="${doctor.link}" target="_blank">View on Google Maps</a>`
+        });
+
+        marker.addListener("click", () => {
+            infoWindow.open(map, marker);
+        });
+
+        bounds.extend(position);
+    });
+
+    map.fitBounds(bounds);
+}
+
+window.onload = initializeMap;
+
+
+document.getElementById("searchScholarButton").addEventListener("click", function () {
+  const diseaseName = document.getElementById("diseaseSearchInput").value.trim();
+
+  if (!diseaseName) {
+      alert("❌ Please enter a disease name.");
+      return;
+  }
+
+  // Encode the disease name to be URL-safe
+  const searchQuery = encodeURIComponent(diseaseName);
+  const scholarURL = `https://scholar.google.com/scholar?q=${searchQuery}`;
+
+  // Redirect user to Google Scholar search results
+  window.open(scholarURL, "_blank"); // Opens in a new tab
+});

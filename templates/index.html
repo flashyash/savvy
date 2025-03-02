@@ -135,6 +135,29 @@
     </div>
   </section>
 
+  <section class="disease-research">
+    <h2>Learn More About a Disease</h2>
+    <input type="text" id="diseaseSearchInput" placeholder="Enter Disease Name">
+    <button id="searchScholarButton">Search Literature</button>
+  </section>
+
+  <section class="doctor-finder">
+    <h2>Find Doctors Near You</h2>
+    <input type="text" id="diseaseInput" placeholder="Enter likely rare disease diagnosis">
+    <input type="text" id="locationInput" placeholder="Enter your location (City, ZIP, etc.)">
+    <button id="findDoctorsButton">Find Doctors</button>
+
+    <!-- Google Map Display -->
+    <div id="map" style="height: 500px; width: 100%;"></div>
+</section>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places,geometry" defer></script>
+
+
+
+      
+
+
   <section class="faq-section">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-container">
