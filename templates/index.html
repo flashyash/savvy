@@ -11,11 +11,10 @@
       <img src="{{ url_for('static', filename='logo.png') }}" alt="Symptom Savvy Logo">
     </div>
     <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">About Us</a>
-      <a href="#">Resources</a>
-      <a href="#">Contact</a>
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('about') }}">About Us</a>
     </div>
+    
   </nav>
 
   <section class="hero">

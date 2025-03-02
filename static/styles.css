@@ -642,22 +642,24 @@ body {
 
 .steps-container {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  max-width: 1200px;
-  margin: 0 auto;
+  flex-wrap: wrap; /* Ensures responsiveness */
+  justify-content: center; /* Centers the steps in the row */
+  gap: 20px; /* Space between the boxes */
+  max-width: 1200px; /* Restrict width to prevent stretching */
+  margin: 0 auto; /* Centers the row */
 }
 
 .step-box {
-  background-color: #fff;
-  padding: 2.5rem;
-  border-radius: 12px;
-  width: 270px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  flex: 1; /* Allows flexible growth */
+  min-width: 250px; /* Ensures boxes don’t shrink too much */
+  max-width: 300px; /* Prevents them from being too wide */
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   text-align: center;
-  transition: transform 0.3s ease;
 }
+
 
 .step-box:hover {
   transform: translateY(-5px);
@@ -849,3 +851,65 @@ body {
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+
+
+.team-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centers items */
+  gap: 2rem; /* Adds spacing between team members */
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.team-member {
+  width: 250px;
+  text-align: center;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-member img {
+  width: 100px; /* Resized to a proper profile image */
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+section {
+  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.approach-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.approach-item {
+  flex: 1 1 calc(50% - 20px); /* Makes two per row */
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-hero h1 {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+
+

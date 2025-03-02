@@ -40,9 +40,14 @@ def find_doctors_nearby(location, disease):
 
     return jsonify(doctors)  # Ensure response is properly formatted JSON
 
+
 @app.route("/")
 def home():
     return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY)
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 @app.route("/get_doctors", methods=["POST"])
 def get_doctors():

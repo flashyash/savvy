@@ -4,25 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - Symptom SAVVY</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo">Symptom SAVVY</div>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="about.html" class="active">About Us</a>
-      <a href="#">Resources</a>
-      <a href="#">Contact</a>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Symptom Savvy Logo">
     </div>
-    <a href="#" class="login-btn">Login</a>
+    <div class="nav-links">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('about') }}" class="active">About Us</a>
+    </div>
   </nav>
 
   <section class="about-hero">
     <div class="about-hero-content">
       <h1>Our <span>Mission</span></h1>
-      <p>At Symptom SAVVY, we're dedicated to revolutionizing rare disease diagnosis through advanced AI and personalized medical insights. Our team combines expertise in technology, neuroscience, and healthcare to create solutions that significantly reduce the time to diagnosis for rare conditions.</p>
+      <p>At Symptom SAVVY, we're dedicated to revolutionizing rare disease diagnosis through advanced AI and personalized medical insights.</p>
     </div>
   </section>
 
@@ -31,80 +29,40 @@
     <div class="team-container">
       <div class="team-member">
         <div class="member-image">
-          <img src="/api/placeholder/250/250" alt="Sanjana Kavula">
+          <img src="{{ url_for('static', filename='images/sanjana_kavula.jpg') }}" alt="Sanjana Kavula">
         </div>
         <h3>Sanjana Kavula</h3>
         <p class="member-title">Neuroscience & Social Policy</p>
         <p class="member-school">Freshman, Rice University</p>
-        <p class="member-bio">Experienced in SAH research and development of computational Python queries. Passionate about applying neuroscience principles to improve healthcare accessibility.</p>
       </div>
 
       <div class="team-member">
         <div class="member-image">
-          <img src="/api/placeholder/250/250" alt="Adhira Tippur">
+          <img src="{{ url_for('static', filename='images/adhira_tippur.jpg') }}" alt="Adhira Tippur">
         </div>
         <h3>Adhira Tippur</h3>
         <p class="member-title">Biosciences & Finance</p>
         <p class="member-school">Freshman, Rice University</p>
-        <p class="member-bio">App developer at Rice Apps with experience building healthcare solutions. Combines biological insights with practical application development expertise.</p>
       </div>
 
       <div class="team-member">
         <div class="member-image">
-          <img src="/api/placeholder/250/250" alt="Vismay RaviKumar">
+          <img src="{{ url_for('static', filename='images/vismay_ravikumar.jpg') }}" alt="Vismay RaviKumar">
         </div>
         <h3>Vismay RaviKumar</h3>
         <p class="member-title">Electrical & Computer Engineering, CS</p>
         <p class="member-school">Freshman, Rice University</p>
-        <p class="member-bio">Conducted bioinformatics research with Dr. Lulu Shang. Specializes in computational approaches to medical diagnostics and data analysis.</p>
       </div>
 
       <div class="team-member">
         <div class="member-image">
-          <img src="/api/placeholder/250/250" alt="Yash Kalwani">
+          <img src="{{ url_for('static', filename='images/yash_kalwani.jpg') }}" alt="Yash Kalwani">
         </div>
         <h3>Yash Kalwani</h3>
         <p class="member-title">Computer Science & Biomedical Engineering</p>
         <p class="member-school">Sophomore, Tufts University</p>
-        <p class="member-bio">Currently working at InterSystems, a health tech company. Brings practical industry experience in healthcare software and innovative diagnostic tools.</p>
       </div>
     </div>
   </section>
-
-  <section class="our-approach">
-    <h2>Our Approach</h2>
-    <div class="approach-container">
-      <div class="approach-item">
-        <div class="approach-icon">🧠</div>
-        <h3>Interdisciplinary Expertise</h3>
-        <p>We combine knowledge from neuroscience, computer science, biosciences, and biomedical engineering to create comprehensive diagnostic solutions.</p>
-      </div>
-      <div class="approach-item">
-        <div class="approach-icon">🔬</div>
-        <h3>Research-Backed</h3>
-        <p>Our methodologies are grounded in cutting-edge research in rare diseases, pattern recognition, and medical diagnostics.</p>
-      </div>
-      <div class="approach-item">
-        <div class="approach-icon">💻</div>
-        <h3>Tech Innovation</h3>
-        <p>We leverage advanced AI algorithms and machine learning to identify patterns that traditional diagnostic approaches might miss.</p>
-      </div>
-      <div class="approach-item">
-        <div class="approach-icon">👥</div>
-        <h3>Patient-Centered</h3>
-        <p>Everything we build focuses on improving the patient experience and providing actionable insights for both patients and healthcare providers.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="join-mission">
-    <div class="join-content">
-      <h2>Join Our Mission</h2>
-      <p>We're always looking for partners, researchers, and healthcare providers who share our vision of accelerating rare disease diagnosis and improving patient outcomes.</p>
-      <button class="join-btn">Contact Us</button>
-    </div>
-  </section>
-
-  <script src="script.js"></script>
 </body>
 </html>
