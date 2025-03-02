@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Symptom SAVVY - Rare Disease Diagnosis</title>
+  <div class="logo">Symptom SAVVY</div>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo">Symptom SAVVY</div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Symptom Savvy Logo">
+    </div>
     <div class="nav-links">
       <a href="#">Home</a>
       <a href="#">About Us</a>
       <a href="#">Resources</a>
       <a href="#">Contact</a>
     </div>
-    <a href="#" class="login-btn">Login</a>
   </nav>
 
   <section class="hero">
@@ -137,13 +138,13 @@
 
   <section class="disease-research">
     <h2>Learn More About a Disease</h2>
-    <input type="text" id="diseaseSearchInput" placeholder="Enter Disease Name">
+    <input type="text" id="diseaseSearchInput" placeholder="Enter disease name">
     <button id="searchScholarButton">Search Literature</button>
   </section>
 
   <section class="doctor-finder">
     <h2>Find Doctors Near You</h2>
-    <input type="text" id="diseaseInput" placeholder="Enter likely rare disease diagnosis">
+    <input type="text" id="diseaseInput" placeholder="Enter disease name">
     <input type="text" id="locationInput" placeholder="Enter your location (City, ZIP, etc.)">
     <button id="findDoctorsButton">Find Doctors</button>
 
@@ -185,33 +186,33 @@
   </section>
 
   
-  <section class="trusted">
-    <h2>Validated by leading research investigators</h2>
+  <<section class="trusted">
+    <h2>Validated by Leading Research Investigators</h2>
     <div class="trusted-logos">
-      <div class="investigator-logo">
-        <img src="static/Devin.jpg" alt="Dr. Devin Mcbride- UT Health" class="trusted-logo">
-        <div class="investigator-quote">
-          <p class="quote-text">"I do exntensive research in Sub Arachnoid Hemmorhage- specifically DCI and when I tested the symptoms I was happy to see the model was accurate and listed SAH in the top 3 "</p>
-          <p class="quote-author">Dr. Devin Mcbride, UT Health</p>
+        <div class="investigator-logo">
+            <img src="static/Devin.jpg" alt="Dr. Devin Mcbride- UT Health" class="trusted-logo">
+            <div class="investigator-quote">
+                <p class="quote-text">"I do extensive research in Sub Arachnoid Hemmorhage—specifically DCI, and when I tested the symptoms, I was happy to see the model was accurate and listed SAH in the top 3."</p>
+                <p class="quote-author">Dr. Devin McBride, UT Health</p>
+            </div>
         </div>
-      </div>
-      <div class="investigator-logo">
-        <img src="static/lulu.jpeg" alt="Dr. Lulu Shang- MD Anderson " class="trusted-logo">
-        <div class="investigator-quote"> "Although I do not know much about Phrank, I believe their approach of using a tree diagram is a feasible way to get accurate results"
-          <p class="quote-text">""</p>
-          <p class="quote-author">Dr. Lulu Shang, MD Anderson</p>
+        <div class="investigator-logo">
+            <img src="static/lulu.jpeg" alt="Dr. Lulu Shang - MD Anderson" class="trusted-logo">
+            <div class="investigator-quote">
+                <p class="quote-text">"Although I do not know much about Phrank, I believe their approach of using a tree diagram is a feasible way to get accurate results."</p>
+                <p class="quote-author">Dr. Lulu Shang, MD Anderson</p>
+            </div>
         </div>
-      </div>
-      <div class="investigator-logo">
-        <img src="static/Colton.jpeg" alt="Mr. Colton Mills" class="trusted-logo">
-        <div class="investigator-quote">
-          <p class="quote-text">"As a paramedic, I really appreciate how Symptom Savvy's initial symptom input is through the format of EMT questions"</p>
-          <p class="quote-author">Mr.Colton Mills, Rice University</p>
+        <div class="investigator-logo">
+            <img src="static/Colton.jpeg" alt="Mr. Colton Mills" class="trusted-logo">
+            <div class="investigator-quote">
+                <p class="quote-text">"As a paramedic, I really appreciate how Symptom Savvy's initial symptom input follows the format of EMT questions."</p>
+                <p class="quote-author">Mr. Colton Mills, Rice University</p>
+            </div>
         </div>
-      </div>
-      
     </div>
-  </section>
+</section>
+
 
   <div id="diagnosisModal" class="modal">
     <div class="modal-content">

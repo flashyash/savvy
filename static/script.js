@@ -50,7 +50,7 @@ function autoScroll() {
 }
 
 // Start the auto-scroll after a delay
-setTimeout(autoScroll, 2000);
+//setTimeout(autoScroll, 2000);
 
 // FAQ functionality
 const faqQuestions = document.querySelectorAll('.faq-question');
