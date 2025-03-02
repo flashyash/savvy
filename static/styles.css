@@ -1,4 +1,4 @@
-/* Chatbot styles */
+
 .chatbot-container {
   display: flex;
   flex-direction: column;
@@ -279,7 +279,6 @@ body {
   left: 0;
 }
 
-/* Removed stethoscope animation styles */
 
 .stats {
   background-color: #fff;
@@ -525,7 +524,6 @@ body {
   margin: 0 auto;
 }
 
-/* Updated research investigators section styling */
 .investigator-logo {
   position: relative;
   margin-bottom: 1.5rem;
