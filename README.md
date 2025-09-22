@@ -1,8 +1,5 @@
-# savvy
-Harvard Rare Disease Hackathon 2025
+# Harvard Rare Disease Hackathon 2025
 
-
-Hello Judges,
 SymptomSavvy is a web application designed to address Problem Statement A by 
 streamlining rare disease diagnosis using AI-driven pattern recognition and 
 medical literature insights.
@@ -11,14 +8,12 @@ Our platform assists patients and healthcare providers by analyzing symptoms,
 comparing them to a vast rare disease database, and generating potential 
 matches for further investigation.
 
-
 Make sure you have the following installed before running the project:
 
 Python 3.x
 pip (Python package manager)
 Flask
 Virtual environment (recommended)
-
 
 Please run the following code below in your terminal:
 
@@ -28,7 +23,6 @@ cd savvy
 python -m venv venv       # sets up virtual environment
 source venv/bin/activate  # for macOS/Linux
 venv\Scripts\activate     # for Windows
-
 
 pip install -r requirements.txt   #installs dependencies
 
