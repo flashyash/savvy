@@ -10,13 +10,16 @@ matches for further investigation.
 
 Make sure you have the following installed before running the project:
 
+```
 Python 3.x
 pip (Python package manager)
 Flask
 Virtual environment (recommended)
+```
 
 Please run the following code below in your terminal:
 
+```
 git clone https://github.com/flashyash/savvy
 cd savvy
 
@@ -27,5 +30,4 @@ venv\Scripts\activate     # for Windows
 pip install -r requirements.txt   #installs dependencies
 
 python app.py
-
-
+```
